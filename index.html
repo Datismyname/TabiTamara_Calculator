@@ -28,9 +28,9 @@ label{display:block;font-weight:700;color:#15803d;margin:0 0 9px}
 .note{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
 @media(max-width:520px){.wrap{padding:15px 12px 25px}h1{font-size:26px}.amount{font-size:36px}.grid{grid-template-columns:1fr}}
 </style>
-</head>
+<style>.install-banner{display:none;align-items:center;justify-content:space-between;gap:12px;background:#ecfdf3;border:1px solid #b8e3c5;color:#166534;border-radius:14px;padding:12px 14px;margin:0 0 14px}.install-banner.show{display:flex}.install-text{font-weight:700;font-size:14px}.install-actions{display:flex;gap:7px}.install-btn{border:0;border-radius:9px;padding:9px 12px;font-weight:700;cursor:pointer}.install-now{background:#16a34a;color:#fff}.install-later{background:#fff;color:#166534;border:1px solid #b8d9c1}@media(max-width:520px){.install-banner{align-items:flex-start}.install-actions{flex-direction:column}}</style></head>
 <body>
-<div class="wrap">
+<div class="wrap"><div class="install-banner" id="installBanner"><div class="install-text">يمكنك تثبيت التطبيق الآن</div><div class="install-actions"><button class="install-btn install-now" id="installNow">تثبيت</button><button class="install-btn install-later" id="installLater">لاحقًا</button></div></div>
   <div class="brand">
     <div class="logo">▦</div>
     <h1>حاسبة تابي</h1>
@@ -40,18 +40,13 @@ label{display:block;font-weight:700;color:#15803d;margin:0 0 9px}
   <div class="card">
     <div class="field">
       <label for="net">المبلغ الذي أريد أن يصلني</label>
-      <div class="inputrow"><span class="unit">ر.س</span><input id="net" type="number" inputmode="decimal" min="0" step="0.01" value="0"></div>
+      <div class="inputrow"><span class="unit">ر.س</span><input id="net" type="text" inputmode="decimal" autocomplete="off" min="0" step="0.01" value="0"></div>
     </div>
 
     <div class="field">
       <label for="fee">نسبة تابي من المبيعات</label>
-      <div class="inputrow"><span class="unit">%</span><input id="fee" type="number" inputmode="decimal" min="0" max="99.99" step="0.01" value="10"></div>
-      <div class="presets">
-        <button class="preset" data-v="10">10%</button>
-        <button class="preset" data-v="10.49">10.49%</button>
-        <button class="preset" data-v="11">11%</button>
-        <button class="preset" data-v="12">12%</button>
-      </div>
+      <div class="inputrow"><span class="unit">%</span><input id="fee" type="text" inputmode="decimal" autocomplete="off" min="0" max="99.99" step="0.01" value="9.5"></div>
+      <div class="presets"><button class="preset" data-v="6.99">6.99%</button><button class="preset" data-v="9.5">9.5%</button><button class="preset" data-v="10">10%</button></div>
       <div class="hint">يمكنك كتابة أي نسبة حسب اتفاقك مع تابي.</div>
     </div>
 
@@ -78,26 +73,23 @@ label{display:block;font-weight:700;color:#15803d;margin:0 0 9px}
   <div class="note">تعمل الحاسبة بدون إنترنت. جميع القيم بالريال السعودي.</div>
 </div>
 <script>
-const net=document.getElementById('net'), fee=document.getElementById('fee');
-const gross=document.getElementById('gross'), feeAmount=document.getElementById('feeAmount'), netOut=document.getElementById('netOut'), formula=document.getElementById('formula');
+const net=document.getElementById('net'),fee=document.getElementById('fee'),gross=document.getElementById('gross'),feeAmount=document.getElementById('feeAmount'),netOut=document.getElementById('netOut'),formula=document.getElementById('formula');
+function num(v){return parseFloat(String(v).replace(',','.'))||0}
 function fmt(n){return Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function calc(){
-  let n=parseFloat(net.value)||0, p=parseFloat(fee.value)||0;
-  if(p<0)p=0;if(p>=100)p=99.99;
-  fee.value=p;
-  let g=n/(1-p/100), f=g-n;
-  gross.textContent=fmt(g); feeAmount.textContent=fmt(f); netOut.textContent=fmt(n);
-  formula.textContent=fmt(n)+' ÷ (1 − '+(p/100).toFixed(4).replace(/0+$/,'').replace(/\.$/,'')+') = '+fmt(g);
-}
-net.addEventListener('input',calc); fee.addEventListener('input',calc);
-document.querySelectorAll('.preset').forEach(b=>b.onclick=()=>{fee.value=b.dataset.v;calc()});
-document.getElementById('reset').onclick=()=>{net.value='0';fee.value='10';calc()};
-document.getElementById('copy').onclick=async()=>{
-  const text=gross.textContent;
-  try{await navigator.clipboard.writeText(text+' ريال'); const b=document.getElementById('copy'); b.textContent='تم النسخ ✓'; setTimeout(()=>b.textContent='نسخ المبلغ',1200)}
-  catch(e){alert('المبلغ: '+text+' ريال')}
-};
+function calc(){let n=num(net.value),p=num(fee.value);if(p<0)p=0;if(p>=100)p=99.99;let g=n/(1-p/100),f=g-n;gross.textContent=fmt(g);feeAmount.textContent=fmt(f);netOut.textContent=fmt(n);formula.textContent=fmt(n)+' ÷ (1 − '+(p/100).toFixed(4).replace(/0+$/,'').replace(/\.$/,'')+') = '+fmt(g)}
+function normalize(i){i.value=i.value.replace(',','.').replace(/[^\d.]/g,'');let a=i.value.split('.');if(a.length>2)i.value=a[0]+'.'+a.slice(1).join('')}
+[net,fee].forEach(i=>{i.addEventListener('input',()=>{normalize(i);calc()});i.addEventListener('focus',()=>i.select());i.addEventListener('click',()=>i.select());i.addEventListener('mouseup',e=>e.preventDefault())});
+document.querySelectorAll('.preset').forEach(b=>b.onclick=()=>{fee.value=b.dataset.v;fee.select();calc()});
+document.getElementById('reset').onclick=()=>{net.value='0';fee.value='9.5';calc()};
+document.getElementById('copy').onclick=async()=>{let t=gross.textContent;try{await navigator.clipboard.writeText(t+' ريال');let b=document.getElementById('copy');b.textContent='تم النسخ ✓';setTimeout(()=>b.textContent='نسخ المبلغ',1200)}catch(e){alert('المبلغ: '+t+' ريال')}};
+let deferredPrompt=null,banner=document.getElementById('installBanner');
+let standalone=()=>window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;if(!standalone()&&!localStorage.getItem('tabbyInstallLater'))banner.classList.add('show')});
+document.getElementById('installNow').onclick=async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;banner.classList.remove('show')};
+document.getElementById('installLater').onclick=()=>{localStorage.setItem('tabbyInstallLater','1');banner.classList.remove('show')};
+window.addEventListener('appinstalled',()=>{banner.classList.remove('show');deferredPrompt=null});
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
 calc();
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));}</script>
+</script>
 </body>
 </html>
