@@ -28,7 +28,58 @@ label{display:block;font-weight:700;color:#15803d;margin:0 0 9px}
 .note{text-align:center;color:var(--muted);font-size:12px;margin-top:16px}
 @media(max-width:520px){.wrap{padding:15px 12px 25px}h1{font-size:26px}.amount{font-size:36px}.grid{grid-template-columns:1fr}}
 </style>
-<style>.install-banner{display:none;align-items:center;justify-content:space-between;gap:12px;background:#ecfdf3;border:1px solid #b8e3c5;color:#166534;border-radius:14px;padding:12px 14px;margin:0 0 14px}.install-banner.show{display:flex}.install-text{font-weight:700;font-size:14px}.install-actions{display:flex;gap:7px}.install-btn{border:0;border-radius:9px;padding:9px 12px;font-weight:700;cursor:pointer}.install-now{background:#16a34a;color:#fff}.install-later{background:#fff;color:#166534;border:1px solid #b8d9c1}@media(max-width:520px){.install-banner{align-items:flex-start}.install-actions{flex-direction:column}}</style></head>
+<style>.install-banner{display:none;align-items:center;justify-content:space-between;gap:12px;background:#ecfdf3;border:1px solid #b8e3c5;color:#166534;border-radius:14px;padding:12px 14px;margin:0 0 14px}.install-banner.show{display:flex}.install-text{font-weight:700;font-size:14px}.install-actions{display:flex;gap:7px}.install-btn{border:0;border-radius:9px;padding:9px 12px;font-weight:700;cursor:pointer}.install-now{background:#16a34a;color:#fff}.install-later{background:#fff;color:#166534;border:1px solid #b8d9c1}@media(max-width:520px){.install-banner{align-items:flex-start}.install-actions{flex-direction:column}}</style><style>
+/* v3: Make the customer price the dominant result */
+.result{
+  background:linear-gradient(145deg,#e8f9ed,#f9fffb)!important;
+  border:2px solid #91d3a2!important;
+  border-radius:20px!important;
+  padding:24px 20px 15px!important;
+  box-shadow:0 10px 30px rgba(22,163,74,.10)!important;
+}
+.result-title{
+  font-size:19px!important;
+  font-weight:900!important;
+  color:#0f6f32!important;
+  margin-bottom:5px!important;
+}
+.amount{
+  font-size:56px!important;
+  font-weight:900!important;
+  line-height:1.05!important;
+  color:#07883a!important;
+  margin:8px 0 2px!important;
+  text-shadow:0 1px 0 #fff;
+}
+.sar{font-size:19px!important;font-weight:800!important}
+.grid{
+  margin-top:20px!important;
+  padding-top:11px!important;
+  border-top:1px solid #d8eadc!important;
+  gap:8px!important;
+}
+.stat{
+  background:transparent!important;
+  border:0!important;
+  padding:4px 8px!important;
+  opacity:.55!important;
+}
+.stat small{
+  font-size:10px!important;
+  color:#718078!important;
+  margin-bottom:2px!important;
+}
+.stat b{
+  font-size:14px!important;
+  font-weight:700!important;
+  color:#68746d!important;
+}
+.fee,.net{color:#68746d!important}
+@media(max-width:520px){
+  .amount{font-size:44px!important}
+  .result-title{font-size:17px!important}
+}
+</style></head>
 <body>
 <div class="wrap"><div class="install-banner" id="installBanner"><div class="install-text">يمكنك تثبيت التطبيق الآن</div><div class="install-actions"><button class="install-btn install-now" id="installNow">تثبيت</button><button class="install-btn install-later" id="installLater">لاحقًا</button></div></div>
   <div class="brand">
